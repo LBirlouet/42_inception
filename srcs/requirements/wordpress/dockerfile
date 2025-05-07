@@ -1,0 +1,31 @@
+FROM alpine:3.14
+
+RUN apk update && apk add --no-cache \
+    php7 \
+    php7-fpm \
+    php7-mysqli \
+    php7-json \
+    php7-curl \
+    php7-dom \
+    php7-exif \
+    php7-fileinfo \
+    php7-mbstring \
+    php7-openssl \
+    php7-xml \
+    php7-zip \
+    wget
+
+WORKDIR /var/www/html
+
+RUN wget https://wordpress.org/latest.tar.gz && \
+    tar -xzf latest.tar.gz && \
+    rm latest.tar.gz
+
+COPY conf/wp-config.php /var/www/html/wordpress/
+COPY tools/wordpress_start.sh /usr/local/bin/
+
+RUN chmod +x /usr/local/bin/wordpress_start.sh
+
+EXPOSE 9000
+
+CMD ["/usr/local/bin/wordpress_start.sh"]
