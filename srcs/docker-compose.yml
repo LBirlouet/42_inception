@@ -1,25 +1,62 @@
 version: "3"
 
 services:
-  mariadb:
+  nginx:
+    image:
+      - nginx
     build:
-      context: ./requirements/mariadb
-      dockerfile: Dockerfile
-    container_name: mariadb
-    restart: always
+      context:
+        - ./requirements/nginx
+      dockerfile:
+        - Dockerfile
+    container_name:
+      - nginx
+    restart:
+      - unless-stopped
+    ports:
+      - "443:443"
     volumes:
-      - db_data:/var/lib/mysql
+      - wp_data:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+
+  mariadb:
+    image:
+      - mariadb
+    build:
+      context:
+        - ./requirements/mariadb
+      dockerfile:
+        - Dockerfile
+    container_name:
+      - mariadb
+    restart:
+      - unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
     networks:
       - inception
     env_file:
       - .env
 
   wordpress:
+    image:
+      - wordpress
     build:
-      context: ./requirements/wordpress
-      dockerfile: Dockerfile
-    container_name: wordpress
-    restart: always
+      context:
+        - ./requirements/wordpress
+      dockerfile:
+        - Dockerfile
+    container_name:
+      - wordpress
+    restart:
+      - unless-stopped
     volumes:
       - wp_data:/var/www/html
     networks:
@@ -29,28 +66,14 @@ services:
     env_file:
       - .env
 
-  nginx:
-    build:
-      context: ./requirements/nginx
-      dockerfile: Dockerfile
-    container_name: nginx
-    restart: always
-    ports:
-      - "443:443"
-    volumes:
-      - wp_data:/var/www/html
-    networks:
-      - inception
-    depends_on:
-      - wordpress
-
 volumes:
-  db_data:
+  mariaDb_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/${USER}/data/mariadb
+      # device: /home/data/mariadb
 
   wp_data:
     driver: local
@@ -58,6 +81,7 @@ volumes:
       type: none
       o: bind
       device: /home/${USER}/data/wordpress
+      # device: /home/data/wordpress
 
 networks:
   inception:
