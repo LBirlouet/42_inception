@@ -13,7 +13,11 @@ if [ ! -s "wp-config.php" ]; then
     wp core download --allow-root
 
     echo "Generating wp-config.php file..."
-    wp config create --allow-root --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_USER_PASSWORD --dbhost=$WORDPRESS_DB_HOST --skip-check
+    wp config create --allow-root \
+        --dbname=$MYSQL_DATABASE \
+        --dbuser=$MYSQL_USER  \
+        --dbpass=$MYSQL_USER_PASSWORD \
+        --dbhost=$WORDPRESS_DB_HOST --skip-check
 
     echo "Installing WordPress..."
     wp core install --allow-root --url=$DOMAIN_NAME --title=$WORDPRESS_DB_NAME --admin_user=$WORDPRESS_ADMIN --admin_password=$WORDPRESS_ADMIN_PASSWORD --admin_email=$WORDPRESS_ADMIN_MAIL
