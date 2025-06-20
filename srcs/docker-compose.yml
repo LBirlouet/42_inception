@@ -52,7 +52,7 @@ services:
       - .env
 
 volumes:
-  mariadb_data:
+  mariadb:
     driver: local
     driver_opts:
       type: none
