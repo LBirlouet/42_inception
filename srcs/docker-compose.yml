@@ -11,7 +11,7 @@ services:
     ports:
       - "443:443"
     volumes:
-      - wp_data:/var/www/html
+      - wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -43,7 +43,7 @@ services:
     container_name: wordpress
     restart: unless-stopped
     volumes:
-      - wp_data:/var/www/html
+      - wordpress:/var/www/html
     networks:
       - inception
     depends_on:
@@ -59,7 +59,7 @@ volumes:
       o: bind
       device: /home/${USER}/data/mariadb
 
-  wp_data:
+  wordpress:
     driver: local
     driver_opts:
       type: none
