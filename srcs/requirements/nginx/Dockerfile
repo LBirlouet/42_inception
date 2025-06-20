@@ -11,7 +11,7 @@ RUN apt-get update && \
         -subj "/C=FR/ST=Bruxelles/L=Bruxelles/O=42/OU=lbirloue/CN=lbirloue.42.fr" && \
     rm -rf /var/lib/apt/lists/*
 
-COPY conf/nginx.conf /etc/nginx/nginx.conf.d/
+COPY conf/nginx.conf /etc/nginx/conf.d/
 
 RUN mkdir -p /var/www/html && \
     chmod 755 /var/www/html && \
