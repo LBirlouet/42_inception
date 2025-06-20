@@ -3,7 +3,7 @@ DATA_PATH = $(HOME)/data
 WP_PATH = $(DATA_PATH)/wordpress
 DB_PATH = $(DATA_PATH)/mariadb
 DOCKER = docker
-DOCKER_COMPOSE = docker compose -f $(COMPOSE)
+DOCKER_COMPOSE = docker-compose -f $(COMPOSE)
 
 .PHONY: all up down re clean fclean prune status logs help
 
