@@ -2,17 +2,12 @@ version: "3"
 
 services:
   nginx:
-    image:
-      - nginx
+    image: nginx
     build:
-      context:
-        - ./requirements/nginx
-      dockerfile:
-        - Dockerfile
-    container_name:
-      - nginx
-    restart:
-      - unless-stopped
+      context: ./requirements/nginx
+      dockerfile: Dockerfile
+    container_name: nginx
+    restart: unless-stopped
     ports:
       - "443:443"
     volumes:
@@ -25,17 +20,12 @@ services:
       - .env
 
   mariadb:
-    image:
-      - mariadb
+    image: mariadb
     build:
-      context:
-        - ./requirements/mariadb
-      dockerfile:
-        - Dockerfile
-    container_name:
-      - mariadb
-    restart:
-      - unless-stopped
+      context: ./requirements/mariadb
+      dockerfile: Dockerfile
+    container_name: mariadb
+    restart: unless-stopped
     ports:
       - "3306:3306"
     volumes:
@@ -46,17 +36,12 @@ services:
       - .env
 
   wordpress:
-    image:
-      - wordpress
+    image: wordpress
     build:
-      context:
-        - ./requirements/wordpress
-      dockerfile:
-        - Dockerfile
-    container_name:
-      - wordpress
-    restart:
-      - unless-stopped
+      context: ./requirements/wordpress
+      dockerfile: Dockerfile
+    container_name: wordpress
+    restart: unless-stopped
     volumes:
       - wp_data:/var/www/html
     networks:
@@ -67,13 +52,12 @@ services:
       - .env
 
 volumes:
-  mariaDb_data:
+  mariadb_data:
     driver: local
     driver_opts:
       type: none
       o: bind
       device: /home/${USER}/data/mariadb
-      # device: /home/data/mariadb
 
   wp_data:
     driver: local
@@ -81,7 +65,6 @@ volumes:
       type: none
       o: bind
       device: /home/${USER}/data/wordpress
-      # device: /home/data/wordpress
 
 networks:
   inception:
