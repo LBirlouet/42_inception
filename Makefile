@@ -112,7 +112,7 @@ check:
 	docker ps | grep -q nginx && echo "$(GREEN)✓ NGINX est en cours d'exécution$(RESET)" || echo "$(RED)✗ NGINX n'est pas en cours d'exécution$(RESET)"
 	docker ps | grep -q wordpress && echo "$(GREEN)✓ WordPress est en cours d'exécution$(RESET)" || echo "$(RED)✗ WordPress n'est pas en cours d'exécution$(RESET)"
 	docker ps | grep -q mariadb && echo "$(GREEN)✓ MariaDB est en cours d'exécution$(RESET)" || echo "$(RED)✗ MariaDB n'est pas en cours d'exécution$(RESET)"
-	curl -s -k -o /dev/null -w "$(GREEN)✓ Site web accessible: %{http_code}$(RESET)\n" https://fvastena.42.fr
+	curl -s -k -o /dev/null -w "$(GREEN)✓ Site web accessible: %{http_code}$(RESET)\n" https://lbirloue.42.fr
 
 help:
 	@echo "$(BLUE)════════════════════════ INCEPTION MAKEFILE ════════════════════════$(RESET)"
