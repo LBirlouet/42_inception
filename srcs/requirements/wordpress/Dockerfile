@@ -13,7 +13,7 @@ RUN wget https://wordpress.org/latest.tar.gz && \
     tar -xzf latest.tar.gz && \
     rm latest.tar.gz
 
-COPY conf/wp-config.php /var/www/html/wordpress/
+COPY conf/wordpress.conf /usr/local/bin/wp_start.sh
 COPY tools/wp_start.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/wp_start.sh
