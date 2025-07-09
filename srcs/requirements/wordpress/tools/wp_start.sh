@@ -14,9 +14,9 @@ if [ ! -s "wp-config.php" ]; then
 
     echo "Generating wp-config.php file..."
     wp config create --allow-root \
-        --dbname=$MYSQL_DATABASE \
-        --dbuser=$MYSQL_USER  \
-        --dbpass=$MYSQL_USER_PASSWORD \
+        --dbname=$WORDPRESS_DB_NAME \
+        --dbuser=$WORDPRESS_DB_USER \
+        --dbpass=$WORDPRESS_DB_PASSWORD \
         --dbhost=$WORDPRESS_DB_HOST --skip-check
 
     echo "Installing WordPress..."
