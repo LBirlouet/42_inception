@@ -14,17 +14,24 @@ if [ ! -s "wp-config.php" ]; then
 
     echo "Generating wp-config.php file..."
     wp config create --allow-root \
-        --dbname=$WORDPRESS_DB_NAME \
-        --dbuser=$WORDPRESS_DB_USER \
-        --dbpass=$WORDPRESS_DB_PASSWORD \
-        --dbhost=$WORDPRESS_DB_HOST --skip-check
+        --dbname="$WORDPRESS_DB_NAME" \
+        --dbuser="$WORDPRESS_DB_USER" \
+        --dbpass="$WORDPRESS_DB_PASSWORD" \
+        --dbhost="$WORDPRESS_DB_HOST" --skip-check
 
     echo "Installing WordPress..."
-    wp core install --allow-root --url=$DOMAIN_NAME --title=$WORDPRESS_DB_NAME --admin_user=$WORDPRESS_ADMIN --admin_password=$WORDPRESS_ADMIN_PASSWORD --admin_email=$WORDPRESS_ADMIN_MAIL
+    wp core install --allow-root \
+        --url="$DOMAIN_NAME" \
+        --title="$WORDPRESS_DB_NAME" \
+        --admin_user="$WORDPRESS_ADMIN" \
+        --admin_password="$WORDPRESS_ADMIN_PASSWORD" \
+        --admin_email="$WORDPRESS_ADMIN_MAIL"
 
     echo "Adding a new WordPress user..."
-    wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_MAIL" --role=subscriber --user_pass="$WORDPRESS_USER_PASSWORD" --allow-root --path=/var/www/html
-
+    wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_MAIL" \
+        --role=subscriber \
+        --user_pass="$WORDPRESS_USER_PASSWORD" \
+        --allow-root --path=/var/www/html
 else
     echo "WordPress is already set up and ready to use."
 fi
