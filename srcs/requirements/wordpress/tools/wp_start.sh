@@ -1,6 +1,12 @@
 #!/bin/bash
 
-sleep 10
+# test
+# Attendre que MariaDB réponde sur le port 3306
+echo "Waiting for MariaDB to be ready..."
+while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
+    sleep 2
+done
+# test
 
 chown -R www-data:www-data /var/www/html
 chmod -R 755 /var/www/html
