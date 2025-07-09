@@ -54,6 +54,9 @@ services:
       - WORDPRESS_USER=${WORDPRESS_USER}
       - WORDPRESS_USER_MAIL=${WORDPRESS_USER_MAIL}
       - WORDPRESS_USER_PASSWORD=${WORDPRESS_USER_PASSWORD}
+
+    expose:
+      - "9000"
     # test
 
   mariadb:
