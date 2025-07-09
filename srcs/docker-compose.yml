@@ -19,7 +19,6 @@ services:
       - wordpress
     env_file:
       - .env
-    restart: unless-stopped
 
   wordpress:
     image: wordpress
@@ -43,7 +42,7 @@ services:
     #   - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
     #   - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
     #   # test
-  
+
   mariadb:
     image: mariadb
     build:
@@ -66,7 +65,6 @@ services:
     #   - MYSQL_USER=${MYSQL_USER}
     #   - MYSQL_PASSWORD=${MYSQL_PASSWORDw}
     #   # test
-
 
 volumes:
   mariadb:
