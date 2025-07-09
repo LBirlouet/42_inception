@@ -14,8 +14,8 @@ if [ ! -s "wp-config.php" ]; then
 
     echo "Generating wp-config.php file..."
     wp config create --allow-root \
-        --dbname=$WORDPRESS_DB_NAME \
-        --dbuser=$WORDPRESS_DB_USER \
+        --dbname=$MYSQL_DATABASE \
+        --dbuser=$MYSQL_USER  \
         --dbpass=$WORDPRESS_DB_PASSWORD \
         --dbhost=$WORDPRESS_DB_HOST --skip-check
 
