@@ -32,12 +32,9 @@ if [ $TRIES -eq $MAX_TRIES ]; then
     exit 1
 fi
 
-# Créer l'utilisateur WordPress si nécessaire
+# Créer les utilisateurs SQL (2 hosts : '%' + nom DNS WordPress)
 echo "Ensuring WordPress DB user exists..."
-mysql -h"$MYSQL_HOST" -uroot -p"$MYSQL_ROOT_PASSWORD" <<EOF || {
-    echo "ERROR: Failed to create WordPress DB user or grant privileges."
-    exit 1
-}
+mysql -h"$MYSQL_HOST" -uroot -p"$MYSQL_ROOT_PASSWORD" <<EOF
 CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
 GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
 CREATE USER IF NOT EXISTS '$MYSQL_USER'@'wordpress.srcs_inception' IDENTIFIED BY '$MYSQL_PASSWORD';
