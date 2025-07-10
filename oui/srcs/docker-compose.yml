@@ -73,12 +73,10 @@
 #   inception:
 #     driver: bridge
 
-version: '3.8'
-
 services:
   nginx:
     build:
-      context: ./srcs/requirements/nginx
+      context: ./requirements/nginx
     container_name: nginx
     ports:
       - "443:443"
@@ -92,7 +90,7 @@ services:
 
   wordpress:
     build:
-      context: ./srcs/requirements/wordpress
+      context: ./requirements/wordpress
     container_name: wordpress
     depends_on:
       - mariadb
@@ -106,7 +104,7 @@ services:
 
   mariadb:
     build:
-      context: ./srcs/requirements/mariadb
+      context: ./requirements/mariadb
     container_name: mariadb
     env_file:
       - .env
