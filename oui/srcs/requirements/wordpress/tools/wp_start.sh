@@ -1,7 +1,17 @@
 #!/bin/bash
 set -e
 
+echo "=== WP-START.SH ==="
 echo "Waiting for MariaDB to be ready..."
+echo "Using host: $MYSQL_HOST"
+echo "Using user: $MYSQL_USER"
+echo "Database: $MYSQL_DATABASE"
+
+# Vérifie que le hostname DNS de MariaDB est résolu
+getent hosts "$MYSQL_HOST" || {
+    echo "ERROR: Hostname '$MYSQL_HOST' could not be resolved!"
+    exit 1
+}
 
 # Attendre que MariaDB soit accessible
 MAX_TRIES=30
@@ -23,7 +33,17 @@ if [ $TRIES -eq $MAX_TRIES ]; then
 fi
 
 # Créer l'utilisateur WordPress si nécessaire
-mysql -h"$MYSQL_HOST" -uroot -p"$MYSQL_ROOT_PASSWORD" -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD'; GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%'; FLUSH PRIVILEGES;" 2>/dev/null || true
+echo "Ensuring WordPress DB user exists..."
+mysql -h"$MYSQL_HOST" -uroot -p"$MYSQL_ROOT_PASSWORD" <<EOF || {
+    echo "ERROR: Failed to create WordPress DB user or grant privileges."
+    exit 1
+}
+CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';
+GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'%';
+CREATE USER IF NOT EXISTS '$MYSQL_USER'@'wordpress.srcs_inception' IDENTIFIED BY '$MYSQL_PASSWORD';
+GRANT ALL PRIVILEGES ON \`$MYSQL_DATABASE\`.* TO '$MYSQL_USER'@'wordpress.srcs_inception';
+FLUSH PRIVILEGES;
+EOF
 
 # Changer vers le répertoire WordPress
 cd /var/www/html
@@ -32,25 +52,22 @@ cd /var/www/html
 if [ ! -f wp-config.php ]; then
     echo "Preparing WordPress installation..."
     
-    # Nettoyer le répertoire et télécharger WordPress
     rm -rf *
     wp core download --allow-root
-    
-    # Créer wp-config.php
+
     wp config create \
         --dbname="$MYSQL_DATABASE" \
         --dbuser="$MYSQL_USER" \
         --dbpass="$MYSQL_PASSWORD" \
         --dbhost="$MYSQL_HOST" \
         --allow-root
-    
+
     # Attendre que la base soit vraiment prête
     until wp db check --allow-root; do
         echo "Waiting for database to be ready..."
         sleep 2
     done
-    
-    # Installer WordPress
+
     wp core install \
         --url="$DOMAIN_NAME" \
         --title="My WordPress Site" \
@@ -59,13 +76,12 @@ if [ ! -f wp-config.php ]; then
         --admin_email="$WP_ADMIN_EMAIL" \
         --skip-email \
         --allow-root
-    
-    # Créer un utilisateur supplémentaire
+
     wp user create "$WP_USER" "$WP_USER_EMAIL" \
         --user_pass="$WP_USER_PASSWORD" \
         --role=author \
         --allow-root
-    
+
     echo "WordPress installation completed!"
 else
     echo "WordPress already installed."
