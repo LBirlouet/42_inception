@@ -11,7 +11,7 @@ RUN apt-get update -y && \
 RUN rm -f /etc/php/7.4/fpm/pool.d/www.conf
 
 # Copier le pool personnalisé
-COPY conf/wordpress.conf /etc/php/7.4/fpm/pool.d/
+COPY conf/www.conf /etc/php/7.4/fpm/pool.d/
 
 # Définir le répertoire de travail
 WORKDIR /var/www/html
