@@ -1,49 +1,44 @@
 #!/bin/bash
 
-# test
-# Attendre que MariaDB réponde sur le port 3306
+# Attendre MariaDB
 echo "Waiting for MariaDB to be ready..."
-while ! mysqladmin ping -h"$WORDPRESS_DB_HOST" --silent; do
+while ! mysqladmin ping -h"$MYSQL_HOST" -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" --silent; do
     sleep 2
 done
-# test
 
-chown -R www-data:www-data /var/www/html
-chmod -R 755 /var/www/html
-
-cd /var/www/html
-
-if [ ! -s "wp-config.php" ]; then
-
+# Préparer WordPress si ce n'est pas déjà fait
+if [ ! -f /var/www/html/wp-config.php ]; then
     echo "Preparing WordPress installation..."
-    wp core download --allow-root
 
-    echo "Generating wp-config.php file..."
-    wp config create --allow-root \
-        --dbname="$WORDPRESS_DB_NAME" \
-        --dbuser="$WORDPRESS_DB_USER" \
-        --dbpass="$WORDPRESS_DB_PASSWORD" \
-        --dbhost="$WORDPRESS_DB_HOST" --skip-check
+    # Télécharger WordPress (dans /var/www/html)
+    wp core download --path=/var/www/html --allow-root
 
-    echo "Installing WordPress..."
-    wp core install --allow-root \
-        --url="$DOMAIN_NAME" \
-        --title="$WORDPRESS_DB_NAME" \
-        --admin_user="$WORDPRESS_ADMIN" \
-        --admin_password="$WORDPRESS_ADMIN_PASSWORD" \
-        --admin_email="$WORDPRESS_ADMIN_MAIL"
+    # Créer wp-config
+    wp config create \
+        --dbname=$MYSQL_DATABASE \
+        --dbuser=$MYSQL_USER \
+        --dbpass=$MYSQL_PASSWORD \
+        --dbhost=$MYSQL_HOST \
+        --path=/var/www/html \
+        --allow-root
 
-    echo "Adding a new WordPress user..."
-    wp user create "$WORDPRESS_USER" "$WORDPRESS_USER_MAIL" \
-        --role=subscriber \
-        --user_pass="$WORDPRESS_USER_PASSWORD" \
-        --allow-root --path=/var/www/html
-else
-    echo "WordPress is already set up and ready to use."
+    # Installer WordPress
+    wp core install \
+        --url=$DOMAIN_NAME \
+        --title="My WordPress" \
+        --admin_user=$WP_ADMIN \
+        --admin_password=$WP_ADMIN_PASSWORD \
+        --admin_email=$WP_ADMIN_EMAIL \
+        --path=/var/www/html \
+        --allow-root
+
+    # Ajouter un utilisateur
+    wp user create $WP_USER $WP_USER_EMAIL \
+        --user_pass=$WP_USER_PASSWORD \
+        --role=author \
+        --allow-root
 fi
 
-echo "Starting de PHP-FPM..."
-# test
-sed -i "s|listen = .*|listen = 9000|" /etc/php/7.4/fpm/pool.d/www.conf
-# test
-exec /usr/sbin/php-fpm7.4 -F
+# Lancer PHP-FPM
+echo "Starting PHP-FPM..."
+exec php-fpm7.4 -F
