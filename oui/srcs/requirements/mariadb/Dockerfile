@@ -6,7 +6,7 @@ RUN apt-get update && \
     mkdir -p /var/run/mysqld && \
     chown -R mysql:mysql /var/run/mysqld
 
-COPY ./conf/mdb.cnf /etc/mysql/mariadb.conf.d/mdb.cnf
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-server.cnf
 
 COPY ./tools/db_init.sh /usr/local/bin/db_init.sh
 
