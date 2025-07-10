@@ -35,29 +35,8 @@ services:
       - mariadb
     env_file:
       - .env
-    #   # test
-    # environment:
-    #   - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
-    #   - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
-    #   - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
-    #   - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
-    #   # test
-    environment:
-      - WORDPRESS_DB_HOST=${WORDPRESS_DB_HOST}
-      - WORDPRESS_DB_NAME=${WORDPRESS_DB_NAME}
-      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
-      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
-      - DOMAIN_NAME=${DOMAIN_NAME}
-      - WORDPRESS_ADMIN=${WORDPRESS_ADMIN}
-      - WORDPRESS_ADMIN_MAIL=${WORDPRESS_ADMIN_MAIL}
-      - WORDPRESS_ADMIN_PASSWORD=${WORDPRESS_ADMIN_PASSWORD}
-      - WORDPRESS_USER=${WORDPRESS_USER}
-      - WORDPRESS_USER_MAIL=${WORDPRESS_USER_MAIL}
-      - WORDPRESS_USER_PASSWORD=${WORDPRESS_USER_PASSWORD}
-
-    expose:
-      - "9000"
-    # test
+    # expose:
+    #   - "9000"
 
   mariadb:
     image: mariadb
@@ -74,19 +53,6 @@ services:
       - inception
     env_file:
       - .env
-      # test
-    # environment:
-    #   - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-    #   - MYSQL_DATABASE=${MYSQL_DATABASE}
-    #   - MYSQL_USER=${MYSQL_USER}
-    #   - MYSQL_PASSWORD=${MYSQL_PASSWORDw}
-    #   # test
-    environment:
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-    # test
 
 volumes:
   mariadb:
@@ -94,14 +60,14 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/data/mariadb
+      device: ${HOME}/data/mariadb
 
   wordpress:
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: /home/${USER}/data/wordpress
+      device: ${HOME}/data/wordpress
 
 networks:
   inception:

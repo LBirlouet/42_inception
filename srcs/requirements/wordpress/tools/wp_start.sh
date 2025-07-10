@@ -42,4 +42,5 @@ else
     echo "WordPress is already set up and ready to use."
 fi
 
+echo "Starting de PHP-FPM..."
 exec /usr/sbin/php-fpm7.4 -F
